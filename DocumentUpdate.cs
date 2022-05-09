@@ -7,37 +7,31 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace TextDocumentAPI
 {
-    public static class DocumentGet
+    public static class DocumentUpdate
     {
-        [FunctionName("DocumentGet")]
+        [FunctionName("DocumentUpdate")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "documents/get/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "documents/update/{id}/{text}")] HttpRequest req,
             [CosmosDB(
                 databaseName: Constants.COSMOS_DB_DATABASE_NAME,
                 collectionName: Constants.COSMOS_DB_CONTAINER_NAME,
-                ConnectionStringSetting = Constants.COSMOS_DB_CONNECTION_STRING,
-                SqlQuery ="SELECT * FROM c WHERE c.id={id}")] Document documentItem,
+                ConnectionStringSetting = Constants.COSMOS_DB_CONNECTION_STRING)] 
             ILogger log,
-            string id)
+            string id,
+            string text)
         {
-            log.LogInformation("text document get triggered.");
+            log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string document = id;
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            document = document ?? data?.name;
 
-            //if no item exists
-            if (documentItem == null)
-            {
-                return new NotFoundResult();
-            }
+            //TODO
+            //update CosmosDB
 
-            string responseMessage = documentItem.documentBody;
+            string responseMessage = $"hello {id}, heres your: {text}";
 
             return new OkObjectResult(responseMessage);
         }

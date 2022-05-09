@@ -7,37 +7,30 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace TextDocumentAPI
 {
-    public static class DocumentGet
+    public static class DocumentDelete
     {
-        [FunctionName("DocumentGet")]
+        [FunctionName("DocumentDelete")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "documents/get/{id}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "documents/delete/{id}")] HttpRequest req,
             [CosmosDB(
                 databaseName: Constants.COSMOS_DB_DATABASE_NAME,
                 collectionName: Constants.COSMOS_DB_CONTAINER_NAME,
-                ConnectionStringSetting = Constants.COSMOS_DB_CONNECTION_STRING,
-                SqlQuery ="SELECT * FROM c WHERE c.id={id}")] Document documentItem,
+                ConnectionStringSetting = Constants.COSMOS_DB_CONNECTION_STRING)] 
             ILogger log,
             string id)
         {
-            log.LogInformation("text document get triggered.");
+            log.LogInformation("delete function triggered");
 
-            string document = id;
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            document = document ?? data?.name;
 
-            //if no item exists
-            if (documentItem == null)
-            {
-                return new NotFoundResult();
-            }
+            //TODO
+            //delete document from db at id
 
-            string responseMessage = documentItem.documentBody;
+            string responseMessage = "deleted";
 
             return new OkObjectResult(responseMessage);
         }

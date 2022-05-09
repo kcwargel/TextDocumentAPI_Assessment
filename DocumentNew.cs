@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Azure.Cosmos;
 
 namespace TextDocumentAPI
 {
@@ -14,7 +15,7 @@ namespace TextDocumentAPI
     {
         [FunctionName("DocumentNew")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "documents/new/{documentBody}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "documents/new/{documentBody}")] HttpRequest req,
             [CosmosDB(
             databaseName: Constants.COSMOS_DB_DATABASE_NAME,
             collectionName: Constants.COSMOS_DB_CONTAINER_NAME,
