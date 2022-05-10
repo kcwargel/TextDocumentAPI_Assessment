@@ -31,7 +31,15 @@ namespace TextDocumentAPI
             //TODO
             //update CosmosDB
 
-            string responseMessage = $"hello {id}, heres your: {text}";
+            var responseObj = new
+            {
+                status = 200,
+                message = "Success, document updated",
+                id = id,
+                text = text
+            };
+
+            string responseMessage = JsonConvert.SerializeObject(responseObj);
 
             return new OkObjectResult(responseMessage);
         }

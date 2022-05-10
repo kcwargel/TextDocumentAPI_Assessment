@@ -41,8 +41,14 @@ namespace TextDocumentAPI
             //insert doc
             await documentsOut.AddAsync(newDocument);
 
-            //return id as success
-            string responseMessage = $"Success: {newDocument.id}";
+            var responseObj = new
+            {
+                status = 200,
+                message = "Success, document created",
+                id = newDocument.id,
+            };
+
+            string responseMessage = JsonConvert.SerializeObject(responseObj);
 
             return new OkObjectResult(responseMessage);
         }

@@ -37,7 +37,14 @@ namespace TextDocumentAPI
                 return new NotFoundResult();
             }
 
-            string responseMessage = documentItem.documentBody;
+            var responseObj = new
+            {
+                status = 200,
+                message = "Success, document retrieved",
+                textDocument = documentItem.documentBody
+            };
+
+            string responseMessage = JsonConvert.SerializeObject(responseObj);
 
             return new OkObjectResult(responseMessage);
         }

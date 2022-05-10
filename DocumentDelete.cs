@@ -30,7 +30,13 @@ namespace TextDocumentAPI
             //TODO
             //delete document from db at id
 
-            string responseMessage = "deleted";
+            var responseObj = new
+            {
+                status = 200,
+                message = "Success, document deleted"
+            };
+
+            string responseMessage = JsonConvert.SerializeObject(responseObj);
 
             return new OkObjectResult(responseMessage);
         }
